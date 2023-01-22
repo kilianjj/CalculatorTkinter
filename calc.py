@@ -1,10 +1,16 @@
 import tkinter as tk
 
 class Calculator:
+    """
+    Calculator app class
+    Contains methods needed for building and running the calculator
+    """
 
     def __init__(self):
         """
-
+        Initialize important variables
+        Initialize Tkinter window and create calculator
+        Begin running the application
         """
         # calc vars
         self.prev = None
@@ -24,25 +30,37 @@ class Calculator:
         self.calc.rowconfigure(8)
         self.calc.pack()
         self.make_calc(self.calc)
-        self.run()
+        self.window.mainloop()
 
     def update(self):
+        """
+        Updates calculator display
+        """
         if self.display is not None and self.prev is not None:
             self.display.configure(text=self.display_contents)
             self.prev.configure(text=self.prev_contents)
 
     def dot(self):
+        """
+        Adds decimal when button is pressed if one is not already in the entry
+        """
         if "." not in self.display_contents:
             self.display_contents = self.display_contents + "."
             self.update()
 
     def numeric(self, z):
+        """
+        Adds the entered number if the number is not over 13 characters long
+        :param z: the number being entered
+        """
         if len(self.display_contents) < 13:
             self.display_contents = self.display_contents + str(z)
-        self.update()
-        return
+            self.update()
 
     def back_space(self):
+        """
+        Remove the ending character to the current entry
+        """
         if self.display_contents != "":
             if len(self.display_contents) == 1:
                 self.display_contents = ""
@@ -51,7 +69,6 @@ class Calculator:
             else:
                 self.display_contents = self.display_contents[:len(self.display_contents) - 1]
             self.update()
-            return
 
     def equals(self):
         if self.prev_contents != "" and self.display_contents != "":
@@ -76,6 +93,10 @@ class Calculator:
             self.update()
 
     def operation(self, o):
+        """
+        Handles inputs of arithmetic operation buttons
+        :param o: character representing which operation to perform
+        """
         if self.display_contents != "":
             if self.prev_contents == "":
                 self.holder = float(self.display_contents)
@@ -100,30 +121,35 @@ class Calculator:
                 self.update()
 
     def inputs(self, arg):
-        if arg == '.':
+        """
+        Calls various functions based on which calculator button was clicked
+        :param arg: character denoting which button was clicked on calculator
+        """
+        if arg == '.':          # decimal input
             self.dot()
             return
-        if arg.isnumeric():
+        if arg.isnumeric():     # number input
             self.numeric(arg)
             return
-        if arg == 'c':
+        if arg == 'c':          # clear all, C, input
             self.display_contents = ""
             self.prev_contents = ""
             self.holder = None
             self.update()
             return
-        if arg == 'e':
+        if arg == 'e':          # clear current entry, CE, input
             self.display_contents = ""
             self.update()
             return
-        if arg == '<':
+        if arg == '<':          # backspace input
             self.back_space()
             return
-        if arg == '=':
+        if arg == '=':          # equals input
             self.equals()
-        if arg == '+' or arg == '-' or arg == '*' or arg == '/':
+            return
+        if arg == '+' or arg == '-' or arg == '*' or arg == '/':     # operation inputs
             self.operation(arg)
-        if arg == '#':
+        if arg == '#':  # negation input
             if len(self.display_contents) >= 1 and self.display_contents != ".":
                 if "." in self.display_contents:
                     self.display_contents = str(float(self.display_contents) * -1)
@@ -133,6 +159,10 @@ class Calculator:
                 return
 
     def make_calc(self, w):
+        """
+        Create buttons and labels, layout calculator widgets
+        :param w: Tkinter window
+        """
         button1 = tk.Button(w, text="1", width=10, command=lambda: self.inputs('1'), height=4, relief="raised")
         button2 = tk.Button(w, text="2", width=10, command=lambda: self.inputs('2'), height=4, relief="raised")
         button3 = tk.Button(w, text="3", width=10, command=lambda: self.inputs('3'), height=4, relief="raised")
@@ -181,8 +211,4 @@ class Calculator:
         self.display = display
         self.prev = prev
 
-    def run(self):
-        """ Run the calculator application """
-        self.window.mainloop()
-
-x = Calculator()
+x = Calculator()    # create calculator instance to run
